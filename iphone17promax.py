@@ -48,7 +48,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main.serve(
-        name="iphone17promax",
-        cron="*/10 * * * *"
-    )
+    main()
