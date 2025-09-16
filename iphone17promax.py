@@ -48,4 +48,13 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+
+    main.from_source(
+        source="https://github.com/iLtc/prefect-flows.git",
+        entrypoint="iphone17promax.py:main"
+    ).deploy(
+        name="iphone17promax",
+        work_pool_name="docker-pool",
+        cron="*/5 * * * *"
+    )
