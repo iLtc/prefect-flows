@@ -41,20 +41,20 @@ def send_notification(results: list[str]):
 
 
 @flow
-def main():
+def iphone17promax_cn():
     stores = get_stores()
     results = check_availability(stores)
     send_notification(results)
 
 
 if __name__ == "__main__":
-    # main()
+    # iphone17promax_cn()
 
-    main.from_source(
+    iphone17promax_cn.from_source(
         source="https://github.com/iLtc/prefect-flows.git",
-        entrypoint="iphone17promax.py:main"
+        entrypoint="iphone17promax-cn.py:iphone17promax_cn"
     ).deploy(
-        name="iphone17promax",
+        name="iphone17promax-cn",
         work_pool_name="docker-pool",
         cron="*/5 * * * *"
     )
