@@ -1,6 +1,5 @@
 from prefect import flow, task
 from prefect.blocks.system import Secret
-from prefect.schedules import Interval
 from prefect.variables import Variable
 import requests
 from google.oauth2 import service_account
@@ -64,13 +63,4 @@ def permupdate():
 
 
 if __name__ == "__main__":
-    # permupdate()
-
-    permupdate.from_source(
-        source="https://github.com/iLtc/prefect-flows.git",
-        entrypoint="permupdate.py:permupdate"
-    ).deploy(
-        name="permupdate",
-        work_pool_name="docker-pool",
-        schedule=Interval(timedelta(hours=8))
-    )
+    permupdate()
