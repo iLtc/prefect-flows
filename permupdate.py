@@ -4,7 +4,8 @@ from prefect.variables import Variable
 import requests
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
-from datetime import timedelta
+from datetime import datetime
+import pytz
 
 @task(log_prints=True)
 def get_updates() -> list[int]:
@@ -36,9 +37,31 @@ def update_spreadsheet(results: list[int]):
     credentials = service_account.Credentials.from_service_account_info(json_data)
     service = build("sheets", "v4", credentials=credentials)
 
-    values = [[x] for x in results]
+    range = "PERM!B2:B18"
+
+    result = (
+        service.spreadsheets()
+        .values()
+        .get(spreadsheetId=perm_sheet_id, range=range)
+        .execute()
+    )
+    old_rows = result.get("values", [])
+
+    new_rows = [[x] for x in results]
+
+    needs_update = False
+
+    for old, new in zip(old_rows, new_rows):
+        if int(old[0].replace(",", "")) != new[0]:
+            needs_update = True
+            break
+
+    if not needs_update:
+        print("No updates needed")
+        return
+
     body = {
-        "values": values
+        "values": new_rows
     }
 
     result = (
@@ -46,7 +69,7 @@ def update_spreadsheet(results: list[int]):
         .values()
         .update(
             spreadsheetId=perm_sheet_id,
-            range="PERM!B2:B18",
+            range=range,
             valueInputOption="USER_ENTERED",
             body=body
         )
@@ -54,6 +77,16 @@ def update_spreadsheet(results: list[int]):
     )
 
     print(f"{result.get('updatedCells')} cells updated.")
+
+    current_time = datetime.now(pytz.timezone('America/Los_Angeles'))
+    current_time_str = current_time.strftime("%Y-%m-%d %H:%M:%S")
+
+    service.spreadsheets().values().update(
+        spreadsheetId=perm_sheet_id,
+        range="PERM!I1",
+        valueInputOption="RAW",
+        body={"values": [[current_time_str]]}
+    ).execute()
 
 
 @flow
