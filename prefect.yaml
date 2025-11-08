@@ -37,6 +37,13 @@ deployments:
       name: raspberry-pi
     schedule:
       cron: "*/10 * * * *"
+
+  - name: tesla-odometer
+    entrypoint: tesla-odometer.py:tesla_odometer
+    work_pool:
+      name: raspberry-pi
+    schedule:
+      cron: "0 3 * * *"
 # - name: iphone17promax-cn
 #   entrypoint: iphone17promax-cn.py:iphone17promax_cn
 #   work_pool:
