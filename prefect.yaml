@@ -14,34 +14,39 @@ push: null
 
 # pull section allows you to provide instructions for cloning this project in remote locations
 pull:
-- prefect.deployments.steps.git_clone:
-    id: clone-step
-    repository: https://github.com/iLtc/prefect-flows.git
-    branch: main
-- prefect.deployments.steps.pip_install_requirements:
-    directory: "{{ clone-step.directory }}"
-    requirements_file: requirements.txt
-
+  - prefect.deployments.steps.git_clone:
+      id: clone-step
+      repository: https://github.com/iLtc/prefect-flows.git
+      branch: main
+  - prefect.deployments.steps.pip_install_requirements:
+      directory: "{{ clone-step.directory }}"
+      requirements_file: requirements.txt
 
 # the deployments section allows you to provide configuration for deploying flows
 deployments:
-- name: permupdate
-  entrypoint: permupdate.py:permupdate
-  work_pool:
-    name: raspberry-pi
-  schedule:
-    cron: "19 */8 * * *"
+  - name: permupdate
+    entrypoint: permupdate.py:permupdate
+    work_pool:
+      name: raspberry-pi
+    schedule:
+      cron: "19 */8 * * *"
 
-- name: iphone17promax-cn
-  entrypoint: iphone17promax-cn.py:iphone17promax_cn
-  work_pool:
-    name: raspberry-pi
-  schedule:
-    cron: "*/5 * * * *"
+  - name: tesla-charging-eta
+    entrypoint: tesla-charging-eta.py:tesla_charging_eta
+    work_pool:
+      name: raspberry-pi
+    schedule:
+      cron: "*/5 * * * *"
+# - name: iphone17promax-cn
+#   entrypoint: iphone17promax-cn.py:iphone17promax_cn
+#   work_pool:
+#     name: raspberry-pi
+#   schedule:
+#     cron: "*/5 * * * *"
 
-- name: iphone17promax-us
-  entrypoint: iphone17promax-us.py:iphone17promax_us
-  work_pool:
-    name: raspberry-pi
-  schedule:
-    cron: "*/5 * * * *"
+# - name: iphone17promax-us
+#   entrypoint: iphone17promax-us.py:iphone17promax_us
+#   work_pool:
+#     name: raspberry-pi
+#   schedule:
+#     cron: "*/5 * * * *"
