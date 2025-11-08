@@ -36,7 +36,7 @@ deployments:
     work_pool:
       name: raspberry-pi
     schedule:
-      cron: "*/5 * * * *"
+      cron: "*/10 * * * *"
 # - name: iphone17promax-cn
 #   entrypoint: iphone17promax-cn.py:iphone17promax_cn
 #   work_pool:
